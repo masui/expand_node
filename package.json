@@ -1,0 +1,12 @@
+{
+    "name": "expand_node",
+    "version": "1.0.0",
+    "description": "ExpandHelp Library",
+    "main": "index.js",
+    "scripts": {
+	"test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Toshiyuki Masui",
+    "url": "github url",
+    "license": "ISC"
+}
