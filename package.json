@@ -2,11 +2,11 @@
     "name": "expand_node",
     "version": "1.0.0",
     "description": "ExpandHelp Library",
-    "main": "index.js",
+    "main": "lib/re_expand.js",
     "scripts": {
-	"test": "echo \"Error: no test specified\" && exit 1"
+	"test": "make"
     },
     "author": "Toshiyuki Masui",
-    "url": "github url",
+    "url": "https://github.com/masui/expand_node",
     "license": "ISC"
 }
