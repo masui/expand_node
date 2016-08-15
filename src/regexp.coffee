@@ -13,6 +13,13 @@ class RegExp
   #        +-->□.....□--+
   #
 
+  #          ( (  )  )  ( (    ) (  (  )  ) (   )  )  | (  (  )  )
+  #  pars   [1]     
+  #           [1,2]
+  #                    [3]
+  #                     [3,4]
+  #                             [3,5]
+
   regexp: (s, toplevel=false) -> # regcat { '|' regcat }
     console.log "----REGEXP #{s}"
     startnode = new Node()
@@ -51,12 +58,10 @@ class RegExp
     [startnode, endnode]
 
   regcat: (s) -> # regfactor { regfactor }
-    console.log "regcat #{s}"
+    # console.log "regcat #{s}"
     [startnode, endnode] = @regfactor s
     while !s.gettoken().match(/^[\)\]\|]$/) && s.nexttoken() != ''
-      console.log "====REGCAT WHILE"
       s.ungettoken()
-      console.log "regcat - ungettoken()"
       [n1, n2] = @regfactor s
       endnode.addTrans '', n1
       endnode = n2
@@ -64,10 +69,9 @@ class RegExp
     [startnode, endnode]
 
   regfactor: (s) -> # regterm [ '?' | '+' | '*' ]
-    console.log "regfactor #{s}"
+    # console.log "regfactor #{s}"
     [startnode, endnode] = @regterm s
     t = s.gettoken()
-    console.log "regfactor-gettoken token=#{t}"
     if t.match /^[\?]$/
       startnode.addTrans '', endnode
     else if t.match /^[\+]$/
@@ -113,4 +117,9 @@ class RegExp
 r = new RegExp()
 s = new Scanner "ab(c|d|e)"
 res = r.regexp s, true
-console.log res
+#console.log res
+#console.log res[0].trans[0].dest
+#console.log ""
+#console.log res[0].trans[0].dest.trans[0].dest.trans[0]
+#console.log ""
+#console.log res[1].trans

@@ -49,7 +49,6 @@ class Scanner
   ungettoken: ->
     if @u == ''
       @u = @t
-      console.log "ungettoken #{@u}"
     else
       console.log "Can't ungettoken()"
 
