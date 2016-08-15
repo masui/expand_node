@@ -1,7 +1,14 @@
-# -*- coding: utf-8 -*-
 #
 # 文字列から1トークンずつ取得
-# 
+#
+#  Scanner = require 'scanner'
+#  s = new Scanner("a(bc|de)?fg")
+#  console.log s.gettoken() => 'a'
+#  console.log s.gettoken() => '('
+#  console.log s.gettoken() => 'bc'
+#  ...
+#
+
 class Scanner
   constructor: (s) ->
     @s = s
@@ -11,6 +18,11 @@ class Scanner
     @u = ''
 
   gettoken: ->
+    token = @gettoken__()
+    console.log "GETTOKEN token = #{token}"
+    token
+
+  gettoken__: ->
     if @u != ''
       @t = @u
       @u = ''
@@ -23,8 +35,7 @@ class Scanner
       @p += 1
       return @t
     else if @t == '\\'
-      @p += 1
-      @t = @a[@p]
+      @t = @a[++@p]
       @t = "\n" if @t == 'n'
       @t = "\t" if @t == 't'
       @p += 1
@@ -32,13 +43,13 @@ class Scanner
     else
       @p += 1
       while @p < @a.length && ! @a[@p].match /^[\(\|\)\*\+\?\[\]\\]$/
-        @t += @a[@p]
-        @p += 1
+        @t += @a[@p++]
       return @t
 
   ungettoken: ->
     if @u == ''
       @u = @t
+      console.log "ungettoken #{@u}"
     else
       console.log "Can't ungettoken()"
 
