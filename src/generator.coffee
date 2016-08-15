@@ -71,20 +71,20 @@ class Generator
       #console.log "list.length = #{list.length}"
       newlist = []
       for entry in list
-        console.log "length=#{length}, entry.id=#{entry.id}"
+        #console.log "length=#{length}, entry.id=#{entry.id}"
         srcnode = Node.node(entry.id)
-        console.log "srcnode = #{srcnode}"
-        console.log "srcnode.trans.length = #{srcnode.trans.length}"
+        #console.log "srcnode = #{srcnode}"
+        #console.log "srcnode.trans.length = #{srcnode.trans.length}"
         if list.length * srcnode.trans.length < 100000
-          console.log "srcnode.trans = #{srcnode.trans}"
+          #console.log "srcnode.trans = #{srcnode.trans}"
           for trans in srcnode.trans
-            console.log "trans = #{trans}"
-            console.log "entry.substrings = #{entry.substrings} entry.id=#{entry.id}"
+            #console.log "trans = #{trans}"
+            #console.log "entry.substrings = #{entry.substrings} entry.id=#{entry.id}"
             ss = entry.substrings.slice(0) # dup
-            console.log "---ss = #{ss}"
-            console.log "srcnode.pars = #{srcnode.pars}"
-            console.log "trans.arg() = #{trans.arg()}"
-            console.log "srcnode.pars = #{srcnode.pars}"
+            #console.log "---ss = #{ss}"
+            #console.log "srcnode.pars = #{srcnode.pars}"
+            #console.log "trans.arg() = #{trans.arg()}"
+            #console.log "srcnode.pars = #{srcnode.pars}"
             for i in srcnode.pars
               ss[i-1] = '' if typeof(ss[i-1]) == "undefined"
               ss[i-1] = ss[i-1] + trans.arg()
@@ -123,12 +123,12 @@ class Generator
                         # patstr = (["(.*)"] * sslen).join("\t")
                         patstr = []
                         patstr.push '(.*)' for i in [0...sslen]
-                        console.log "patstr = #{patstr}-------------------"
+                        #console.log "patstr = #{patstr}-------------------"
                         patstr = patstr.join "\t"
-                        console.log "patstr = #{patstr}"
+                        #console.log "patstr = #{patstr}"
                         # /#{patstr}/.match ss.join("\t")
                         match = ss.join("\t").match(patstr)
-                        console.log "match=#{match}"
+                        #console.log "match=#{match}"
                         
                       # 'set date #{$2}' のような記述の$変数にsubstringの値を代入
                       # res[ambig].push [s, eval('%('+@commands[acceptno]+')')]
