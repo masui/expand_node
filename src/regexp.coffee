@@ -21,7 +21,7 @@ class RegExp
   #                             [3,5]
 
   regexp: (s, toplevel=false) -> # regcat { '|' regcat }
-    console.log "----REGEXP #{s}"
+    #console.log "----REGEXP #{s}"
     startnode = new Node()
     endnode = new Node()
     
@@ -32,7 +32,7 @@ class RegExp
 
     startnode.pars = @pars
     endnode.pars = @pars
-    console.log "@pars = #{@pars}"
+    #console.log "@pars = #{@pars}"
 
     [n1, n2] = @regcat(s)
 
@@ -52,7 +52,7 @@ class RegExp
         n2.accept = @ruleid
       n2.addTrans '', endnode
 
-    console.log "----REGEXP END"
+    #console.log "----REGEXP END"
 
     s.ungettoken()
     [startnode, endnode]
@@ -89,10 +89,10 @@ class RegExp
     [startnode, endnode]
 
   regterm: (s) -># '(' regexp ')' | token
-    console.log "regterm #{s}"
-    console.log "@pars = #{@pars}"
+    #console.log "regterm #{s}"
+    #console.log "@pars = #{@pars}"
     t = s.gettoken()
-    console.log "regterm t = #{t}"
+    #console.log "regterm t = #{t}"
     if t == '('
       @parno += 1
       @pars.push @parno
@@ -113,16 +113,5 @@ class RegExp
       endnode.pars = @pars.slice(0)
       startnode.addTrans t, endnode
       return [startnode, endnode]
-
-#r = new RegExp()
-#s = new Scanner "ab(c|d|e)"
-#res = r.regexp s, true
-# 
-#console.log res
-#console.log res[0].trans[0].dest
-#console.log ""
-#console.log res[0].trans[0].dest.trans[0].dest.trans[0]
-#console.log ""
-#console.log res[1].trans
 
 module.exports = RegExp

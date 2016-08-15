@@ -33,7 +33,7 @@ class Generator
   #
   # ルールを解析して状態遷移機械を作成し、patにマッチするもののリストを返す
   #
-  generate: (pat, blockambig=0) ->
+  generate: (pat, func = null, @maxambig = 2) ->
     res = [[],[],[]] # 曖昧度0,1,2のマッチ結果
     patterns = pat.split('').map (p) ->
       p.toLowerCase()
@@ -44,8 +44,8 @@ class Generator
 
     # HelpDataで指定した状態遷移機械全体を生成
     # (少し時間がかかる)
-    console.log @scanner
-    console.log "-----"
+    #console.log @scanner
+    #console.log "-----"
     [startnode, endnode] = @regexp.regexp(@scanner,true) # top level
 
     #
@@ -60,15 +60,15 @@ class Generator
     # 初期状態
     #
     list = []
-    console.log "statrnode.id = #{startnode.id}"
+    # console.log "statrnode.id = #{startnode.id}"
     list[0] = new GenNode(startnode.id, @asearch.state()) # initstate
     lists[0] = list
 
     for length in [0..10000]
-      console.log "----------------length=#{length}"
+      #console.log "----------------length=#{length}"
       list = lists[length]
-      console.log "list=#{list}"
-      console.log "list.length = #{list.length}"
+      #console.log "list=#{list}"
+      #console.log "list.length = #{list.length}"
       newlist = []
       for entry in list
         console.log "length=#{length}, entry.id=#{entry.id}"
@@ -79,58 +79,68 @@ class Generator
           console.log "srcnode.trans = #{srcnode.trans}"
           for trans in srcnode.trans
             console.log "trans = #{trans}"
-            console.log "entry.substrings = #{entry.substrings}"
+            console.log "entry.substrings = #{entry.substrings} entry.id=#{entry.id}"
             ss = entry.substrings.slice(0) # dup
-            console.log "ss = #{ss}"
+            console.log "---ss = #{ss}"
+            console.log "srcnode.pars = #{srcnode.pars}"
+            console.log "trans.arg() = #{trans.arg()}"
+            console.log "srcnode.pars = #{srcnode.pars}"
             for i in srcnode.pars
+              ss[i-1] = '' if typeof(ss[i-1]) == "undefined"
               ss[i-1] = ss[i-1] + trans.arg()
             newstate = @asearch.state(entry.state, trans.str()) # 新しいマッチング状態を計算してノードに保存
-            console.log "newstate = #{newstate} trans.str = #{trans.str()}"
+            #console.log "newstate = #{newstate} trans.str = #{trans.str()}"
             s = entry.s + trans.str()
+            #console.log "s = #{s}"
             acceptno = trans.dest.accept
-            console.log "acceptno = #{acceptno}"
+            #console.log "acceptno = #{acceptno}"
             newlist.push new GenNode(trans.dest.id, newstate, s, ss, acceptno)
             #
             # この時点で、マッチしているかどうかをstateとacceptpatで判断できる
             # マッチしてたら出力リストに加える
             #
             if acceptno != false
-#                if block_given? then
-#                  (0..blockambig).each { |ambig|
-#                    if !block_listed[s] then
-#                      if (newstate[ambig] & @asearch.acceptpat) != 0 then # マッチ
-#                        block_listed[s] = true
-#                        yield [s] + ss
-#                      end
-#                    end
-#                  }
-#                else
-
-              maxambig = 2
-              for ambig in [0..maxambig]
-                console.log "ambig = #{ambig}"
-                if !listed[ambig][s]
-                  console.log "newstate[ambig] = #{newstate[ambig]}"
-                  if (newstate[ambig] & @asearch.acceptpat) != 0
-                    maxambig = ambig if ambig < maxambig # 曖昧度0でマッチすれば曖昧度1の検索は不要
-                    listed[ambig][s] = true
-                    sslen = ss.length
-                    if sslen > 0
-                      patstr = (["(.*)"] * sslen).join("\t")
-                      console.log "patstr = #{patstr}"
-                      /#{patstr}/.match ss.join("\t")
-                    # 'set date #{$2}' のような記述の$変数にsubstringの値を代入
-                    # res[ambig].push [s, eval('%('+@commands[acceptno]+')')]
-                    res[ambig].push [s, '---']
+              #console.log "s = #{s}"
+              if func
+                for ambig in [0..@maxambig]
+                  if !block_listed[s]
+                    if (newstate[ambig] & @asearch.acceptpat) != 0
+                      block_listed[s] = true
+                      func s
+                      # func [s] + ss
+              else
+                for ambig in [0..@maxambig]
+                  #console.log "ambig = #{ambig}"
+                  if !listed[ambig][s]
+                    #console.log "newstate[ambig] = #{newstate[ambig]}"
+                    if (newstate[ambig] & @asearch.acceptpat) != 0
+                      maxambig = ambig if ambig < maxambig # 曖昧度0でマッチすれば曖昧度1の検索は不要
+                      listed[ambig][s] = true
+                      sslen = ss.length
+                      console.log "sslen = #{sslen}, ss=#{ss}"
+                      match = []
+                      if sslen > 0
+                        # patstr = (["(.*)"] * sslen).join("\t")
+                        patstr = []
+                        patstr.push '(.*)' for i in [0...sslen]
+                        console.log "patstr = #{patstr}-------------------"
+                        patstr = patstr.join "\t"
+                        console.log "patstr = #{patstr}"
+                        # /#{patstr}/.match ss.join("\t")
+                        match = ss.join("\t").match(patstr)
+                        console.log "match=#{match}"
+                        
+                      # 'set date #{$2}' のような記述の$変数にsubstringの値を代入
+                      # res[ambig].push [s, eval('%('+@commands[acceptno]+')')]
+                      #
+                      #res[ambig].push [s, match[@commands[acceptno]]]
+                      res[ambig].push [s, 'xxxx']
 
       break if newlist.length == 0
       lists.push newlist
       break if res[0].length > 100
-      console.log lists
+      #console.log lists
 
     [res[0], res[1], res[2]]
-
-# g = new Generator("abc")
-# console.log g.generate("bc")
 
 module.exports = Generator

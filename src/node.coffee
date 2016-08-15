@@ -15,7 +15,7 @@ class Node
   @_nodes = {}
     
   constructor: ->
-    console.log "Node generated id=#{Node.id}"
+    #console.log "Node generated id=#{Node.id}"
     @id = Node.id # Node.idはクラス変数で@idはインスタンス変数
     @accept = null
     @trans = []
@@ -27,7 +27,7 @@ class Node
     @trans.push t
     
   @node: (id) -> # ノードidからノードを取得
-    console.log "Access Node.node(#{id})"
+    #console.log "Access Node.node(#{id})"
     Node._nodes[id]
     
   @nodes: ->

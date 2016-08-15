@@ -19,7 +19,7 @@ class Scanner
 
   gettoken: ->
     token = @gettoken__()
-    console.log "GETTOKEN token = #{token}"
+    #console.log "GETTOKEN token = #{token}"
     token
 
   gettoken__: ->
