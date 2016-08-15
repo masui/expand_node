@@ -114,12 +114,15 @@ class RegExp
       startnode.addTrans t, endnode
       return [startnode, endnode]
 
-r = new RegExp()
-s = new Scanner "ab(c|d|e)"
-res = r.regexp s, true
+#r = new RegExp()
+#s = new Scanner "ab(c|d|e)"
+#res = r.regexp s, true
+# 
 #console.log res
 #console.log res[0].trans[0].dest
 #console.log ""
 #console.log res[0].trans[0].dest.trans[0].dest.trans[0]
 #console.log ""
 #console.log res[1].trans
+
+module.exports = RegExp

@@ -1,22 +1,3 @@
-class Generator
-  constructor: (id, state=[], s="", substrings=[], accept=false) ->
-    #console.log id
-    #console.log "accept=#{accept}"
-
-  test: ->
-    console.log "I am generator."
-
-module.exports = Generator
-
-# -*- coding: utf-8 -*-
-#
-# Generator.rb
-#
-# Created by Toshiyuki Masui on 2011/02/26.
-# Modified by Toshiyuki Masui on 2012/05/??
-# Modified by Toshiyuki Masui on 2016/04/24
-# Copyright 2011-2016 Pitecan Systems. All rights reserved.
-#
 #          ( (  )  )  ( (    ) (  (  )  ) (   )  )  | (  (  )  )
 #  pars   [1]     
 #           [1,2]
@@ -24,54 +5,56 @@ module.exports = Generator
 #                     [3,4]
 #                             [3,5]
 
-#require 're_expand/Scanner'
-#require 're_expand/Node'
-#
-#require 'asearch' # これはGem
-#
-#module ExpandRuby
-#  class GenNode
-#    def initialize(id, state=[], s="", substrings=[], accept=false)
-#      @id = id
-#      @s = s
-#      @substrings = substrings
-#      @accept = accept
-#      @state = state
-#    end
-#    attr_accessor :id,:s,:substrings,:accept,:state
-#  end
-#  
-#  class Generator
-#    def initialize(s = nil)
-#      @s = (s ? [s] : [])
-#      @matchedlist = []
-#      @par = 0
-#      @commands = []
-#    end
-#    
-#    def add(pat,command)
-#      @s << pat
-#      @commands << command
-#    end
-#    
-#    def delete
-#      @s.pop
-#      @commands.pop
-#    end
-#    
-#    #
-#    # ルールを解析して状態遷移機械を作成し、patにマッチするもののリストを返す
-#    #
-#    def generate(pat, blockambig=0)
-#      res = [[],[],[]] # 曖昧度0,1,2のマッチ結果
-#      patterns = pat.split.map { |p| p.downcase }
-#      
-#      @asearch = Asearch.new(pat)
-#      scanner = Scanner.new(@s.join('|'))
-#      
-#      # HelpDataで指定した状態遷移機械全体を生成
-#      # (少し時間がかかる)
-#      (startnode, endnode) = regexp(scanner,true) # top level
+Scanner = require './scanner'
+RegExp = require './regexp'
+Asearch = require 'asearch'
+
+#a = new Asearch 'abcde'
+#console.log a.match 'abcde' # => true
+#console.log a.match 'AbCdE' # => true
+#console.log a.match 'abcd' # => false
+#console.log a.match 'abcd', 1 # => true
+#console.log a.match 'ab de', 1 # => true
+#console.log a.match 'abe', 1 # => false
+#console.log a.match 'abe', 2 # => true
+
+class GenNode
+  constructor: (@id, @state=[], @s="", @substrings=[], @accept=false) ->
+  
+
+class Generator
+  constructor: (s = nil) ->
+    @s = if s then  [s] else []
+    @matchedlist = []
+    @par = 0
+    @commands = []
+
+  add: (pat,command) ->
+    @s << pat
+    @commands << command
+
+  delete: ->
+    @s.pop
+    @commands.pop
+
+  #
+  # ルールを解析して状態遷移機械を作成し、patにマッチするもののリストを返す
+  #
+  generate: (pat, blockambig=0) ->
+    res = [[],[],[]] # 曖昧度0,1,2のマッチ結果
+    patterns = pat.split('').map (p) ->
+      p.toLowerCase()
+
+    @asearch = new Asearch(pat)
+    @regexp = new RegExp()
+    @scanner = new Scanner(@s.join('|'))
+
+    # HelpDataで指定した状態遷移機械全体を生成
+    # (少し時間がかかる)
+    console.log @scanner
+    console.log "-----"
+    [startnode, endnode] = @regexp.regexp(@scanner,true) # top level
+
 #      
 #      #
 #      # 状態遷移機械からDepth-Firstで文字列を生成する
@@ -153,108 +136,8 @@ module.exports = Generator
 #      [res[0], res[1], res[2]]
 #    end
 #    
-#    #
-#    # 正規表現をパースして状態遷移機械を作る
-#    #
-#    #            n1     n2
-#    #        +-->□.....□--+
-#    # start /                \  end
-#    #     □ --->□.....□---> □
-#    #       \                /
-#    #        +-->□.....□--+
-#    #
-#    def regexp(s,toplevel=false) # regcat { '|' regcat }
-#      startnode = Node.new
-#      endnode = Node.new
-#      if toplevel then
-#        @pars = []
-#        @parno = 0
-#        @ruleid = 0
-#      end
-#      startnode.pars = @pars
-#      endnode.pars = @pars
-#      (n1, n2) = regcat(s)
-#      startnode.addTrans('',n1)
-#      if toplevel then
-#        n2.accept = @ruleid
-#      end
-#      n2.addTrans('',endnode)
-#      while s.gettoken == '|' && s.nexttoken != '' do
-#        if toplevel then
-#          @pars = []
-#          @parno = 0
-#          @ruleid += 1
-#        end
-#        (n1, n2) = regcat(s)
-#        startnode.addTrans('',n1)
-#        if toplevel then
-#          n2.accept = @ruleid
-#        end
-#        n2.addTrans('',endnode)
-#      end
-#      s.ungettoken
-#      return [startnode, endnode]
-#    end
-#    
-#    def regcat(s) # regfactor { regfactor }
-#      (startnode, endnode) = regfactor(s)
-#      while s.gettoken !~ /^[\)\]\|]$/ && s.nexttoken != '' do
-#        s.ungettoken
-#        (n1, n2) = regfactor(s)
-#        endnode.addTrans('',n1)
-#        endnode = n2
-#      end
-#      s.ungettoken
-#      return [startnode, endnode]
-#    end
-#    
-#    def regfactor(s) # regterm [ '?' | '+' | '*' ]
-#      (startnode, endnode) = regterm(s)
-#      t = s.gettoken
-#      if t =~ /^[\?]$/ then
-#        startnode.addTrans('',endnode)
-#      elsif t =~ /^[\+]$/ then
-#        endnode.addTrans('',startnode)
-#      elsif t =~ /^[\*]$/ then
-#        n = Node.new
-#        startnode.addTrans('',endnode)
-#        endnode.addTrans('',n)
-#        n.addTrans('',startnode)
-#
-#        # ループがあるとマズいのか? 上のように修正すると動くようなのだが
-#        #startnode.addTrans('',endnode)
-#        #endnode.addTrans('',startnode)
-#      else
-#        s.ungettoken
-#      end
-#      return [startnode,endnode]
-#    end
-#    
-#    def regterm(s) # '(' regexp ')' | token
-#      t = s.gettoken
-#      if t == '(' then
-#        @parno += 1
-#        @pars.push(@parno)
-#        (n1, n2) = regexp(s)
-#        n1.pars = @pars.dup
-#        t = s.gettoken
-#        if t == ')' then
-#          @pars.pop
-#          n2.pars = @pars.dup
-#          return [n1, n2]
-#        else
-#          puts 'missing )'
-#          exit
-#        end
-#      else
-#        startnode = Node.new
-#        startnode.pars = @pars.dup
-#        endnode = Node.new
-#        endnode.pars = @pars.dup
-#        startnode.addTrans(t,endnode)
-#        return [startnode, endnode]
-#      end
-#    end
-#  end
-#  
-#end
+
+g = new Generator("ab(c|d|e)")
+g.generate("a")
+
+# module.exports = Generator
