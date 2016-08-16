@@ -26,14 +26,13 @@ class Trans
 
 class Node
   @id = 1
-  @_nodes = {}
+  @nodes = {}
     
   constructor: ->
-    #console.log "Node generated id=#{Node.id}"
     @id = Node.id # Node.idはクラス変数で@idはインスタンス変数
     @accept = null
     @trans = []
-    Node._nodes[Node.id++] = this
+    Node.nodes[Node.id++] = this
     @pars = []
     
   addTrans: (pat,dest) ->
@@ -41,10 +40,6 @@ class Node
     @trans.push t
     
   @node: (id) -> # ノードidからノードを取得
-    #console.log "Access Node.node(#{id})"
-    Node._nodes[id]
+    Node.nodes[id]
     
-  @nodes: ->
-    __.values Node._nodes
-
 module.exports = Node

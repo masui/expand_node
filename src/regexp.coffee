@@ -21,7 +21,6 @@ class RegExp
   #                             [3,5]
 
   regexp: (s, toplevel=false) -> # regcat { '|' regcat }
-    #console.log "----REGEXP #{s}"
     startnode = new Node()
     endnode = new Node()
     
@@ -32,7 +31,6 @@ class RegExp
 
     startnode.pars = @pars
     endnode.pars = @pars
-    #console.log "@pars = #{@pars}"
 
     [n1, n2] = @regcat(s)
 
@@ -52,13 +50,10 @@ class RegExp
         n2.accept = @ruleid
       n2.addTrans '', endnode
 
-    #console.log "----REGEXP END"
-
     s.ungettoken()
     [startnode, endnode]
 
   regcat: (s) -> # regfactor { regfactor }
-    # console.log "regcat #{s}"
     [startnode, endnode] = @regfactor s
     while !s.gettoken().match(/^[\)\]\|]$/) && s.nexttoken() != ''
       s.ungettoken()
@@ -69,7 +64,6 @@ class RegExp
     [startnode, endnode]
 
   regfactor: (s) -> # regterm [ '?' | '+' | '*' ]
-    # console.log "regfactor #{s}"
     [startnode, endnode] = @regterm s
     t = s.gettoken()
     if t.match /^[\?]$/
@@ -89,10 +83,7 @@ class RegExp
     [startnode, endnode]
 
   regterm: (s) -># '(' regexp ')' | token
-    #console.log "regterm #{s}"
-    #console.log "@pars = #{@pars}"
     t = s.gettoken()
-    #console.log "regterm t = #{t}"
     if t == '('
       @parno += 1
       @pars.push @parno
