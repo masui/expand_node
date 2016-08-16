@@ -51,7 +51,7 @@ class Generator
     #
     lists = []
     listed = [{},{},{}]
-    block_listed = {}
+    func_listed = {}
     #
     # 初期状態
     #
@@ -80,11 +80,11 @@ class Generator
             # マッチしてたら出力リストに加える
             #
             if acceptno != null
-              
               for ambig in [0..@maxambig]
-                if !block_listed[s]
+                if (func && !func_listed[s]) or (!func && !listed[ambig][s])
                   if (newstate[ambig] & @asearch.acceptpat) != 0
-                    block_listed[s] = true
+                    listed[ambig][s] = true
+                    func_listed[s] = true
                     sslen = ss.length
                     match = []
                     if sslen > 0
@@ -99,41 +99,6 @@ class Generator
                       func s, command
                     else
                       res[ambig].push [s, command]
-
-#              if func
-#                for ambig in [0..@maxambig]
-#                  if !block_listed[s]
-#                    if (newstate[ambig] & @asearch.acceptpat) != 0
-#                      block_listed[s] = true
-#                      sslen = ss.length
-#                      match = []
-#                      if sslen > 0
-#                        patstr = []
-#                        patstr.push '(.*)' for i in [0...sslen]
-#                        patstr = patstr.join "\t"
-#                        match = ss.join("\t").match(patstr)
-#                      command = @commands[acceptno]
-#                      while m = command.match /^(.*)(\$(\d+))(.*)$/
-#                        command = "#{m[1]}#{match[m[3]]}#{m[4]}"
-#                      func s, command
-#              else
-#                for ambig in [0..@maxambig]
-#                  if !listed[ambig][s]
-#                    if (newstate[ambig] & @asearch.acceptpat) != 0
-#                      maxambig = ambig if ambig < maxambig # 曖昧度0でマッチすれば曖昧度1の検索不要
-#                      listed[ambig][s] = true
-#                      sslen = ss.length
-#                      match = []
-#                      if sslen > 0
-#                        patstr = []
-#                        patstr.push '(.*)' for i in [0...sslen]
-#                        patstr = patstr.join "\t"
-#                        match = ss.join("\t").match(patstr)
-#                      # 'set date $2.' のような記述の$変数にsubstringの値を代入
-#                      command = @commands[acceptno] or ''
-#                      while m = command.match /^(.*)(\$(\d+))(.*)$/
-#                        command = "#{m[1]}#{match[m[3]]}#{m[4]}"
-#                      res[ambig].push [s, command]
 
       break if newlist.length == 0
       lists.push newlist
