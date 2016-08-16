@@ -17,13 +17,6 @@ class Generator
   constructor: (s = '', command = '') ->
     @s = [s]
     @commands = [command]
-    
-    #@s = if s then  [s] else ['']
-    #@commands = if command then [command] else ['']
-    
-    #@s = [s]
-    #@commands = [command]
-    
     @par = 0
 
   add: (pat,command) ->
@@ -63,7 +56,6 @@ class Generator
     # 初期状態
     #
     list = []
-    # console.log "statrnode.id = #{startnode.id}"
     list[0] = new GenNode(startnode.id, @asearch.state()) # initstate
     lists[0] = list
 
