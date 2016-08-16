@@ -15,13 +15,20 @@ class GenNode
   
 class Generator
   constructor: (s = '', command = '') ->
-    @s = if s then  [s] else []
-    @commands = if command then [command] else []
+    @s = [s]
+    @commands = [command]
+    
+    #@s = if s then  [s] else ['']
+    #@commands = if command then [command] else ['']
+    
+    #@s = [s]
+    #@commands = [command]
+    
     @par = 0
 
   add: (pat,command) ->
-    @s.push pat
-    @commands.push command
+    if @s[0] == '' then @s = [pat] else @s.push pat
+    if @commands[0] == '' then @commands = [command] else @commands.push command
 
   delete: ->
     @s.pop
@@ -77,7 +84,7 @@ class Generator
             newlist.push new GenNode(trans.dest.id, newstate, s, ss, acceptno)
             #
             # この時点で、マッチしているかどうかをstateとacceptpatで判断できる
-            # マッチしてたら出力リストに加える
+            # マッチしてたら出力リストに加えるかfuncを呼び出す
             #
             if acceptno != null
               for ambig in [0..@maxambig]
