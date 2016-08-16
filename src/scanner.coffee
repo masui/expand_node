@@ -18,11 +18,6 @@ class Scanner
     @u = ''
 
   gettoken: ->
-    token = @gettoken__()
-    #console.log "GETTOKEN token = #{token}"
-    token
-
-  gettoken__: ->
     if @u != ''
       @t = @u
       @u = ''
