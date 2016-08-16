@@ -8,7 +8,21 @@
 #
 
 __ = require 'underscore-node'
-Trans = require './trans'
+
+#Trans = require './trans'
+
+class Trans
+  constructor: (@pat, @dest) ->  # pat にマッチしたら dest に遷移
+    
+  str: ->
+    @pat.split(/\t/)[0]
+    
+  arg: ->
+    m = @pat.match /^(.*)\t(.*)$/
+    if m
+      return m[2]
+    else
+      return @pat
 
 class Node
   @id = 1

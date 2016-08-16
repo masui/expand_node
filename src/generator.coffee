@@ -8,7 +8,6 @@
 Scanner = require './scanner'
 RegExp = require './regexp'
 Node = require './node'
-Trans = require './trans'
 Asearch = require 'asearch'
 
 class GenNode
@@ -99,7 +98,7 @@ class Generator
             # この時点で、マッチしているかどうかをstateとacceptpatで判断できる
             # マッチしてたら出力リストに加える
             #
-            if acceptno != false
+            if acceptno != null
               #console.log "s = #{s}"
               if func
                 for ambig in [0..@maxambig]
