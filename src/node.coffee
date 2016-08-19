@@ -7,10 +7,6 @@
 #       ----------> □
 #
 
-__ = require 'underscore-node'
-
-#Trans = require './trans'
-
 class Trans
   constructor: (@pat, @dest) ->  # pat にマッチしたら dest に遷移
     
