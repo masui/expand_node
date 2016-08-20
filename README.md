@@ -1,5 +1,8 @@
 # re_expand
 
+* [https://github.com/masui/expand_node](https://github.com/masui/expand_node)
+* [https://npmjs.org/package/re_expand](https://npmjs.org/package/re_expand)
+
 * Generates all the text strings that match the given regexp.
 
     `"(a|b)(1|2)"` => `["a1", "a2", "b1", "b2"]`
