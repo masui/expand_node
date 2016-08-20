@@ -1,8 +1,8 @@
 {
-    "name": "expand_node",
+    "name": "re_expand",
     "version": "1.0.0",
     "description": "ExpandHelp Library",
-    "main": "lib/re_expand.js",
+    "main": "lib/generator.js",
     "scripts": {
 	"test": "make"
     },
