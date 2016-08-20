@@ -92,6 +92,7 @@ class Generator
                       patstr = patstr.join "\t"
                       match = ss.join("\t").match(patstr)
                     command = @commands[acceptno]
+                    command = '' unless command
                     while m = command.match /^(.*)(\$(\d+))(.*)$/
                       command = "#{m[1]}#{match[m[3]]}#{m[4]}"
                     if func
@@ -106,4 +107,3 @@ class Generator
     [res[0], res[1], res[2]]
 
 module.exports = Generator
-
