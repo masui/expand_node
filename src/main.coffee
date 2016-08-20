@@ -16,9 +16,13 @@ shops = "(本屋|床屋|散髪屋)"
 generator.add "#{time}(足|額)を怪我した(場所|町)"
 generator.add "#{schools}のころ学校でよく暴れてた奴"
 generator.add "#{time}#{freq}#{shops}"
+generator.add "#{time}住んでたところの近くの店"
+generator.add "#{time}住んでた家"
 
-f = (s, cmd) -> alert s
+f = (s, cmd) ->
+  $('#div').append $('<div>').text(s)
 
-generator.filter " ", f, 0
+$ ->
+  generator.filter " ", f, 0
 
 
