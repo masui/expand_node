@@ -1,4 +1,4 @@
-Generator = require '../'
+Generator = require 're_expand'
 
 g = new Generator()
 
