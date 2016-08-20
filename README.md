@@ -5,7 +5,7 @@
 
 * Generates all the text strings that match the given regexp.
 
-    `"(a|b)(1|2)"` => `["a1", "a2", "b1", "b2"]`
+    `"(a|b)(1|2)".expand()` => `["a1", "a2", "b1", "b2"]`
 
 * If a filter pattern is given, the output is filtered by the pattern.
 

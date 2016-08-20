@@ -1,3 +1,4 @@
+#
 #          ( (  )  )  ( (    ) (  (  )  ) (   )  )  | (  (  )  )
 #  pars   [1]     
 #           [1,2]
@@ -105,5 +106,19 @@ class Generator
       break if res[0].length > 100
 
     [res[0], res[1], res[2]]
+
+String.prototype.expand = (filterpat=" ", func=null, ambig=0) ->
+  g = new Generator()
+  g.add this, ''
+  strings = []
+
+  if func
+    g.filter filterpat, func
+  else
+    m = g.filter filterpat
+    matched = if m[0].length > 0 then  m[0] else if m[1].length > 0 then  m[1] else m[2]
+    for r in matched
+      strings.push r[0]
+    strings
 
 module.exports = Generator
