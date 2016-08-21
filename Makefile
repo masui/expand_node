@@ -6,7 +6,9 @@ xxx:
 	browserify lib/main.js -o main.js
 
 test:
-	coffee src/test2.coffee
+	coffee sample/sample1.coffee
+	coffee sample/sample2.coffee
+	coffee sample/sample3.coffee
 
 build:
 	coffee -b -c -o lib src
