@@ -1,6 +1,6 @@
 {
     "name": "re_expand",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Generate strings from a regular expression",
     "main": "lib/generator.js",
     "scripts": {
