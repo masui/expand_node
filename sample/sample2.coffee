@@ -1,3 +1,7 @@
 require 're_expand'
 
-console.log "(a|b|c)(x|y|z)(1|2|3)".expand()
+console.log "a(b)*c".expand()
+
+# (s) ->
+#  console.log s
+  

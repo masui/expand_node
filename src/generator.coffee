@@ -97,7 +97,7 @@ class Generator
                     while m = command.match /^(.*)(\$(\d+))(.*)$/
                       command = "#{m[1]}#{match[m[3]]}#{m[4]}"
                     if func
-                      func s, command
+                      func [s].concat(ss), command
                     else
                       res[ambig].push [s, command]
 
